@@ -1,8 +1,96 @@
-import Image from 'next/image'
+'use client'
+
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+
+// Define a type for the climbing hold
+type ClimbingHold = {
+  id: number;
+  name: string;
+  imageUrl: string;
+};
+
+// Dummy data structure for climbing holds
+const climbingHolds: ClimbingHold[] = [
+  { id: 1, name: 'Side Cling', imageUrl: '/holds/side_cling_1.jpeg' },
+  { id: 2, name: 'Jug', imageUrl: '/holds/jug_1.webp' },
+  // Add more holds as needed
+];
+
+const FlashCardGame: React.FC = () => {
+  const [currentHold, setCurrentHold] = useState<ClimbingHold | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [userInput, setUserInput] = useState<string>('');
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setCurrentHold(climbingHolds[currentIndex]);
+    setUserInput('');
+    setIsCorrect(null);
+  }, [currentIndex]);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % climbingHolds.length);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (currentHold && userInput.trim().toLowerCase() === currentHold.name.toLowerCase()) {
+      setIsCorrect(true);
+    } else {
+      setIsCorrect(false);
+    }
+  };
+
+  if (!currentHold) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h1>Climbing Hold Flash Card</h1>
+      <div>
+        <img src={currentHold.imageUrl} alt={currentHold.name} />
+        <p>{currentHold.name}</p>
+      </div>
+      <input
+        type="text"
+        value={userInput}
+        onChange={handleChange}
+        placeholder="Type the name of the hold"
+      />
+      <button onClick={handleSubmit}>Check</button>
+      {isCorrect === true && <span>✅</span>}
+      {isCorrect === false && <span>❌</span>}
+      <button onClick={handleNext}>Next Hold</button>
+    </div>
+  );
+};
+
+export default FlashCardGame;
+
+/*
+import Image from 'next/image';
+import React from 'react';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      
+      <div>
+        <Image
+          src="/side_cling_1.jpeg"
+          alt="Side Cling"
+          width={100}
+          height={100}
+          priority
+        ></Image>
+      </div>
+      <div>
+        <input type='text'></input><button>go!</button>
+      </div>
+      
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
@@ -111,3 +199,4 @@ export default function Home() {
     </main>
   )
 }
+*/
