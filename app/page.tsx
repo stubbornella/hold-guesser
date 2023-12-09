@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image from 'next/image'
 
 // Define a type for the climbing hold
 type ClimbingHold = {
@@ -51,7 +51,13 @@ const FlashCardGame: React.FC = () => {
     <div>
       <h1>Climbing Hold Flash Card</h1>
       <div>
-        <img src={currentHold.imageUrl} alt={currentHold.name} />
+        <Image
+          src={currentHold.imageUrl}
+          alt={currentHold.name}
+          width={100}
+          height={100}
+          priority
+        ></Image>
         <p>{currentHold.name}</p>
       </div>
       <input
