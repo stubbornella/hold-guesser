@@ -37,7 +37,8 @@ const FlashCardGame: React.FC = () => {
     setUserInput(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (currentHold && userInput.trim().toLowerCase() === currentHold.name.toLowerCase()) {
       setIsCorrect(true);
     } else {
@@ -49,26 +50,27 @@ const FlashCardGame: React.FC = () => {
 
   return (
     <div>
-      <h1>Climbing Hold Flash Card</h1>
+      <h1>Guess the hold?</h1>
       <div>
         <Image
           src={currentHold.imageUrl}
           alt={currentHold.name}
-          width={100}
-          height={100}
+          width={300}
+          height={300}
           priority
         ></Image>
-        <p>{currentHold.name}</p>
+        {isCorrect === true && <span>✅</span>}
+        {isCorrect === false && <span>❌</span>}
       </div>
-      <input
-        type="text"
-        value={userInput}
-        onChange={handleChange}
-        placeholder="Type the name of the hold"
-      />
-      <button onClick={handleSubmit}>Check</button>
-      {isCorrect === true && <span>✅</span>}
-      {isCorrect === false && <span>❌</span>}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={userInput}
+          onChange={handleChange}
+          placeholder="Hold name?"
+        />
+        <button type="submit">❓</button>
+      </form>
       <button onClick={handleNext}>Next Hold</button>
     </div>
   );
