@@ -14,6 +14,7 @@ type ClimbingHold = {
 const climbingHolds: ClimbingHold[] = [
   { id: 1, name: 'Side Cling', imageUrl: '/holds/side_cling_1.jpeg' },
   { id: 2, name: 'Jug', imageUrl: '/holds/jug_1.webp' },
+  { id: 3, name: 'Jug', imageUrl: '/holds/jug_1.webp' },
   // Add more holds as needed
 ];
 
