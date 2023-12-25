@@ -36,7 +36,7 @@ type CurrentClimber = {
   left: number;
 };
 
-const leftOffset = (climber: Climber, currentLimb: string): string => { // hardcoded leftHand for now where function is called
+const leftOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
   const { width, coordinates } = climber;
   const { left } = coordinates[currentLimb as keyof Coordinates];
 
@@ -46,9 +46,9 @@ const leftOffset = (climber: Climber, currentLimb: string): string => { // hardc
   return `${percentage}%`;
 }
 
-const topOffset = (climber: Climber, currentLimb: string): string => { // hardcoded leftHand for now where function is called
+const topOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
   const { height, coordinates } = climber;
-  const { top } = coordinates[currentLimb as keyof Coordinates];
+  const { top } = coordinates[currentLimb as keyof Coordinates]; // TODO: this line is throwing an error when I use highlightedHand rather than hardcoding the string
 
   if (!height) return '-5px';
   
@@ -136,7 +136,7 @@ const CallGame: React.FC = () => {
             height={climbers[0].height}
             priority
           />
-          <div className={`current-limb`} style={{top: topOffset(climbers[0], 'leftHand'), left: leftOffset(climbers[0], 'leftHand')}}>
+          <div className={`current-limb`} style={{top: topOffset(climbers[0], 'rightHand'), left: leftOffset(climbers[0], 'rightHand')}}>
             {highlightedHand}  
           </div>
         </div>
