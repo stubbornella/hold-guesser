@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image'
+import Image from 'next/image';
 
 // Define a type for the climbing hold
 type ClimbingHold = {
