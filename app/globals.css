@@ -41,10 +41,10 @@ body {
   background-size: 75px 75px;
 }
 
-.wall {
+/*.wall {
   min-height: 100vh;
   min-height: 1vh;
-}
+}*/
 
 .climber {
   display: inline-block;
