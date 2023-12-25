@@ -36,25 +36,7 @@ type CurrentClimber = {
   left: number;
 };
 
-const leftOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
-  const { width, coordinates } = climber;
-  const { left } = coordinates[currentLimb as keyof Coordinates];
 
-  if (!width) return '-5px';
-  
-  const percentage = (left / width) * 100;
-  return `${percentage}%`;
-}
-
-const topOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
-  const { height, coordinates } = climber;
-  const { top } = coordinates[currentLimb as keyof Coordinates]; // TODO: this line is throwing an error when I use highlightedHand rather than hardcoding the string
-
-  if (!height) return '-5px';
-  
-  const percentage = (top / height) * 100;
-  return `${percentage}%`;
-}
 /*
 const leftOffset = (climber: Climber, currentLimb: string): String => {
   if (!climber.width) return '-5px';
@@ -71,8 +53,7 @@ const leftOffset = (climber: Climber, currentLimb: string): String => {
       return '-5px'; // should never happen, not sure what the right value is here
   }
 } 
-*/
-/*
+
 const topOffset = (climber: Climber, currentLimb: string): String => {
   if (!climber.height) return '-5px';
   switch (currentLimb) {
@@ -89,6 +70,7 @@ const topOffset = (climber: Climber, currentLimb: string): String => {
   }
 } 
 */
+
 // dummy data structure for climbers
 const climbers: Climbers = [
   { 
@@ -124,6 +106,27 @@ const CallGame: React.FC = () => {
     setHighlightedHand(Math.random() < 0.5 ? 'rightHand' : 'leftHand');
   };
 
+  
+  const leftOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
+    const { width, coordinates } = climber;
+    const left = climber.coordinates.rightHand.left;
+  
+    if (!width) return '-5px';
+    
+    const percentage = (left / width) * 100;
+    return `${percentage}%`;
+  }
+  
+  const topOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
+    const { height, coordinates } = climber;
+    const top = climber.coordinates.rightHand.top;
+
+    if (!height) return '-5px'; // error condition so I'll notice it visually
+    
+    const percentage = (top / height) * 100;
+    return `${percentage}%`;
+  }
+
   return (
     <div className='wall'>
         <h1>Climbing Blind</h1>
@@ -136,7 +139,7 @@ const CallGame: React.FC = () => {
             height={climbers[0].height}
             priority
           />
-          <div className={`current-limb`} style={{top: topOffset(climbers[0], 'rightHand'), left: leftOffset(climbers[0], 'rightHand')}}>
+          <div className={`current-limb`} style={{top: topOffset(climbers[0], highlightedHand), left: leftOffset(climbers[0], highlightedHand)}}>
             {highlightedHand}  
           </div>
         </div>
