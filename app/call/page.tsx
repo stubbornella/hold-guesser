@@ -9,6 +9,7 @@ type Climber = {
   coordinates: Coordinates;
   width?: number;
   height?: number;
+  currentLimb?: CurrentLimb;
 };
 
 // define the type of the climbers array
@@ -28,49 +29,6 @@ type Coordinates = {
   leftFoot: Coordinate;
 };
 
-// add a notion of a currentClimber
-type CurrentClimber = {
-  climber: Climber;
-  currentLimb: string;
-  top: number;
-  left: number;
-};
-
-
-/*
-const leftOffset = (climber: Climber, currentLimb: string): String => {
-  if (!climber.width) return '-5px';
-  switch (currentLimb) {
-    case 'right-hand':
-      return (climber.coordinates.rightHand.left / climber.width) * 100 + '%';
-    case 'left-hand':
-      return (climber.coordinates.leftHand.left/climber.width) * 100 + '%';
-    case 'right-foot':
-      return (climber.coordinates.rightFoot.left/climber.width) * 100 + '%';
-    case 'left-foot':
-      return (climber.coordinates.leftFoot.left/climber.width) * 100 + '%';
-    default:
-      return '-5px'; // should never happen, not sure what the right value is here
-  }
-} 
-
-const topOffset = (climber: Climber, currentLimb: string): String => {
-  if (!climber.height) return '-5px';
-  switch (currentLimb) {
-    case 'right-hand':
-      return (climber.coordinates.rightHand.top / climber.height) * 100 + '%';
-    case 'left-hand':
-      return (climber.coordinates.leftHand.top/climber.height) * 100 + '%';
-    case 'right-foot':
-      return (climber.coordinates.rightFoot.top/climber.height) * 100 + '%';
-    case 'left-foot':
-      return (climber.coordinates.leftFoot.top/climber.height) * 100 + '%';
-    default:
-      return '-5px'; // should never happen, not sure what the right value is here
-  }
-} 
-*/
-
 // dummy data structure for climbers
 const climbers: Climbers = [
   { 
@@ -85,51 +43,83 @@ const climbers: Climbers = [
     width: 1076,
     height: 1568 
   },
+  { 
+    name: 'Max Froument', 
+    imageUrl: '/climbers/2.png',
+    coordinates: {
+      rightHand: { top: 321, left: 936 },
+      leftHand: { top: 682, left: 301 },
+      rightFoot: { top: 5, left: 5 },
+      leftFoot: { top: 5, left: 5 },
+    }, 
+    width: 816,
+    height: 1304 
+  },
   // add more climbers as needed
 ];
 
 // game that teaches people who don't know their right from their left how to call a climb for a visually impaired climber
 
 const CallGame: React.FC = () => {
-  const [highlightedHand, setHighlightedHand] = useState('');
+  const [currentClimber, setCurrentClimber] = useState<Climber>(climbers[0]);
 
   useEffect(() => {
-    setHighlightedHand(Math.random() < 0.5 ? 'rightHand' : 'leftHand');
+    setCurrentClimber({
+      ...currentClimber,
+      currentLimb: Math.random() < 0.5 ? 'rightHand' : 'leftHand'
+    });
   }, []);
 
   const guessHand = (hand: string) => {
-    if (hand === highlightedHand) {
+    if (hand === currentClimber.currentLimb) {
       alert('Correct!');
     } else {
       alert('Incorrect!');
     }
-    setHighlightedHand(Math.random() < 0.5 ? 'rightHand' : 'leftHand');
+    setCurrentClimber({
+      ...currentClimber,
+      currentLimb: Math.random() < 0.5 ? 'rightHand' : 'leftHand'
+    });
   };
 
-  
-  const leftOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
-    const { width, coordinates } = climber;
-    const left = climber.coordinates.rightHand.left;
+  const leftOffset = (): string => {
+    if (!currentClimber || !currentClimber.coordinates || !currentClimber.currentLimb || !currentClimber.coordinates[currentClimber.currentLimb]) {
+      return '-5px'; // or some other default value
+    }
+    const { width, coordinates } = currentClimber;
+    const left = currentClimber.coordinates[currentClimber.currentLimb].left;
   
     if (!width) return '-5px';
     
     const percentage = (left / width) * 100;
     return `${percentage}%`;
-  }
-  
-  const topOffset = (climber: Climber, currentLimb: string): string => { // hardcoded rightHand for now where function is called
-    const { height, coordinates } = climber;
-    const top = climber.coordinates.rightHand.top;
+  };
 
-    if (!height) return '-5px'; // error condition so I'll notice it visually
+  const topOffset = (): string => {
+    if (!currentClimber || !currentClimber.coordinates || !currentClimber.currentLimb || !currentClimber.coordinates[currentClimber.currentLimb]) {
+      return '-5px'; // or some other default value
+    }
+    const { height, coordinates } = currentClimber;
+    
+    const top = currentClimber.coordinates[currentClimber.currentLimb].top;
+  
+    if (!height) return '-5px';
     
     const percentage = (top / height) * 100;
     return `${percentage}%`;
-  }
-
+  };
+  
   return (
     <div className='wall'>
-        <h1>Climbing Blind</h1>
+        <h1>
+          <Image
+            src='/logo.png'
+            alt='Climb Assist'
+            height='60'
+            width='51'
+            priority
+          />
+        </h1>
         <div className='hold'></div>
         <div className='climber'>
           <Image
@@ -139,16 +129,19 @@ const CallGame: React.FC = () => {
             height={climbers[0].height}
             priority
           />
-          <div className={`current-limb`} style={{top: topOffset(climbers[0], highlightedHand), left: leftOffset(climbers[0], highlightedHand)}}>
-            {highlightedHand}  
+          <div className={`current-limb`} 
+            style={{
+              top: topOffset(), 
+              left: leftOffset()}}
+            title={currentClimber.currentLimb}>  
           </div>
         </div>
         <div>Call: R - 6 - 3 (show call as it is being built by player)</div>
-        <div className='controls flex rounded-full'>
-          <button onClick={() => guessHand('leftHand')} title="left hand" className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-l">
+        <div className='btn-group'>
+          <button className='btn' onClick={() => guessHand('leftHand')} title="left hand">
               L
           </button>
-          <button onClick={() => guessHand('rightHand')} title="right hand" className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-r">
+          <button className='btn' onClick={() => guessHand('rightHand')} title="right hand">
               R
           </button>
         </div>

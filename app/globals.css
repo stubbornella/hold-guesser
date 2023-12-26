@@ -42,25 +42,20 @@ body {
   background-size: 75px 75px;
 }
 
-/*.wall {
+.wall {
   min-height: 100vh;
-  min-height: 1vh;
-}*/
+}
 
 .climber {
   display: inline-block;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  /*border: 2px solid lime;*/
 }
 
-img {
+.climber img {
   display: inline-block;
-  /*border: 2px solid magenta;*/
-
+  filter: drop-shadow(.6rem 1.1rem 0.5rem rgba(0, 0, 0, .8));
 }
+
  .current-limb {
   --limb-size: 10%;
   display: block;
@@ -69,10 +64,81 @@ img {
   aspect-ratio: 1 / 1;
   margin-left: calc(-1 * var(--limb-size)/2);
   margin-top: calc(-1* var(--limb-size)/2);
+  /*background-image: radial-gradient(circle,
+    rgb(248, 239, 186) 0px,
+    rgb(248, 239, 186) 25px, 
+    black 25px, 
+    black 30px,
+    rgb(248, 239, 186) 30px, 
+    rgb(248, 239, 186) 35px);*/
+
+  background-color: rgb(248, 239, 186);
   background-image: radial-gradient(circle,
-    orchid 0px, magenta 15px, orange 35px);
+    rgba(0,0,0,.2) 0,
+    rgba(0,0,0,.5) 30%, 
+    rgb(248, 239, 186) 31%);
 
   border-radius: 50%;
-  border: 3px solid black;
+  border: 10px solid black;
+  border-style: double;
   z-index: -1;
+}
+h1 {
+  /*background-color: rgb(0, 26, 58);*/
+  float: left;
+  margin: 10px;
+}
+
+h1 img {
+  border-radius: 10px;
+  border: 2px solid rgb(0, 26, 58);
+}
+
+
+/* buttons */
+
+.btn {
+  background-color: #007bff; /* Primary Blue */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Darker Blue */
+}
+
+/*.btn:active {
+  background-color: #004080; /* Even Darker Blue /
+  transform: translateY(2px);
+}*/
+
+.btn:focus {
+  outline: 2px solid #ff6600; /* Highlight Color */
+  outline-offset: 2px;
+}
+
+.btn-group .btn {
+  margin-right: -1px; /* Align buttons tightly */
+}
+
+.btn-group .btn:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.btn-group .btn:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-right: 0;
+}
+
+.btn:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
