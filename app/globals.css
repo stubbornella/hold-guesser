@@ -27,7 +27,6 @@ html {
 }
 
 body {
-  color: magenta;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -40,6 +39,10 @@ body {
   min-height: 100vh;
   background-image: repeating-radial-gradient(circle, rgba(0,0,0,.3) 0%, rgba(0,0,0,.3) 5%, transparent 5%, transparent 100%);
   background-size: 75px 75px;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling */
 }
 
 .wall {
@@ -47,13 +50,19 @@ body {
 }
 
 .climber {
-  display: inline-block;
+  display: block;
   position: relative;
+  max-height: 80dvh;
+  border: 1px solid red;
 }
 
 .climber img {
-  display: inline-block;
+  display: block;
   filter: drop-shadow(.6rem 1.1rem 0.5rem rgba(0, 0, 0, .8));
+  max-height: 100%;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
  .current-limb {
@@ -64,14 +73,6 @@ body {
   aspect-ratio: 1 / 1;
   margin-left: calc(-1 * var(--limb-size)/2);
   margin-top: calc(-1* var(--limb-size)/2);
-  /*background-image: radial-gradient(circle,
-    rgb(248, 239, 186) 0px,
-    rgb(248, 239, 186) 25px, 
-    black 25px, 
-    black 30px,
-    rgb(248, 239, 186) 30px, 
-    rgb(248, 239, 186) 35px);*/
-
   background-color: rgb(248, 239, 186);
   background-image: radial-gradient(circle,
     rgba(0,0,0,.2) 0,
@@ -85,13 +86,20 @@ body {
 }
 h1 {
   /*background-color: rgb(0, 26, 58);*/
-  float: left;
-  margin: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 h1 img {
   border-radius: 10px;
   border: 2px solid rgb(0, 26, 58);
+}
+
+.score {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 
