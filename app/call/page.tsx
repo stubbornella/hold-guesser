@@ -9,7 +9,7 @@ type Climber = {
   coordinates: Coordinates;
   width?: number;
   height?: number;
-  currentLimb?: CurrentLimb;
+  currentLimb?: string;
 };
 
 // define the type of the climbers array
@@ -62,6 +62,8 @@ const climbers: Climbers = [
 
 const CallGame: React.FC = () => {
   const [currentClimber, setCurrentClimber] = useState<Climber>(climbers[0]);
+  const [score, setScore] = useState(0);
+  const [call, setCall] = useState('');
 
   useEffect(() => {
     setCurrentClimber({
@@ -72,9 +74,10 @@ const CallGame: React.FC = () => {
 
   const guessHand = (hand: string) => {
     if (hand === currentClimber.currentLimb) {
-      alert('Correct!');
+      setScore(score + 1);
+      setCall(hand);
     } else {
-      alert('Incorrect!');
+      setScore(score - 1);
     }
     setCurrentClimber({
       ...currentClimber,
@@ -120,6 +123,7 @@ const CallGame: React.FC = () => {
             priority
           />
         </h1>
+        <div className='score'>Score: {score}</div>
         <div className='hold'></div>
         <div className='climber'>
           <Image
@@ -136,7 +140,7 @@ const CallGame: React.FC = () => {
             title={currentClimber.currentLimb}>  
           </div>
         </div>
-        <div>Call: R - 6 - 3 (show call as it is being built by player)</div>
+        <div>Call: {call} - 6 - 3 (show call as it is being built by player)</div>
         <div className='btn-group'>
           <button className='btn' onClick={() => guessHand('leftHand')} title="left hand">
               L
