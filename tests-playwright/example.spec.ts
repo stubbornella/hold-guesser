@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+test('should navigate to the home page and check for text', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  const title = await page.textContent('h1');
+  expect(title).toBe('Guess the hold?');
+});
+
+
+/*import { test, expect } from '@playwright/test';
+
 test('has title', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 
@@ -16,3 +25,4 @@ test('get started link', async ({ page }) => {
   // Expects page to have a heading with the name of Installation.
   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 });
+*/
