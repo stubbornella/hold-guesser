@@ -35,13 +35,13 @@ const climbers: Climbers = [
     name: 'Alex Ondra', 
     imageUrl: '/climbers/1.png',
     coordinates: {
-      rightHand: { top: 321, left: 936 },
-      leftHand: { top: 682, left: 301 },
-      rightFoot: { top: 5, left: 5 },
-      leftFoot: { top: 5, left: 5 },
+      rightHand: { top: 49, left: 409 },
+      leftHand: { top: 228, left: 101 },
+      leftFoot: { top: 359, left: 6 },
+      rightFoot: { top: 576, left: 263 },
     }, 
-    width: 1076,
-    height: 1568 
+    width: 447,
+    height: 594 
   },
   { 
     name: 'Max Froument', 
@@ -85,12 +85,12 @@ const CallGame: React.FC = () => {
     });
   };
 
-  const leftOffset = (): string => {
-    if (!currentClimber || !currentClimber.coordinates || !currentClimber.currentLimb || !currentClimber.coordinates[currentClimber.currentLimb]) {
+  const leftOffset = (limb: string): string => {
+    if (!currentClimber || !currentClimber.coordinates || !limb || !currentClimber.coordinates[limb]) {
       return '-5px'; // or some other default value
     }
     const { width, coordinates } = currentClimber;
-    const left = currentClimber.coordinates[currentClimber.currentLimb].left;
+    const left = currentClimber.coordinates[limb].left;
   
     if (!width) return '-5px';
     
@@ -98,18 +98,64 @@ const CallGame: React.FC = () => {
     return `${percentage}%`;
   };
 
-  const topOffset = (): string => {
-    if (!currentClimber || !currentClimber.coordinates || !currentClimber.currentLimb || !currentClimber.coordinates[currentClimber.currentLimb]) {
+  const topOffset = (limb: string): string => {
+    if (!currentClimber || !currentClimber.coordinates || !limb || !currentClimber.coordinates[limb]) {
       return '-5px'; // or some other default value
     }
     const { height, coordinates } = currentClimber;
-    
-    const top = currentClimber.coordinates[currentClimber.currentLimb].top;
+    const top = currentClimber.coordinates[limb].top;
   
     if (!height) return '-5px';
     
     const percentage = (top / height) * 100;
     return `${percentage}%`;
+  };
+
+  type Hold = {
+    position: { top: string, left: string },
+    type: string,
+    label: string,
+    status: string,
+  };
+  
+  type HoldsProps = {
+    holds: Hold[],
+  };
+
+  const holds = [
+    { position: { 
+      top: topOffset('leftHand'), 
+      left: leftOffset('leftHand') }, 
+      type: 'used', label: 'used, move from this hold', status: 'selected' },
+    { position: { 
+      top: topOffset('rightHand'), 
+      left: leftOffset('rightHand') },
+      type: 'used', label: 'used', status: '' },
+    { position: { 
+      top: topOffset('leftFoot'), 
+      left: leftOffset('leftFoot') }, 
+      type: 'used', label: 'used', status: '' },
+    { position: { 
+      top: topOffset('rightFoot'), 
+      left: leftOffset('rightFoot') }, 
+      type: 'used', label: 'used', status: '' },
+    { position: { top: '30px', left: '40px' }, type: 'next', label: 'to this hold', status: '' },
+  ];
+  
+  const Holds: React.FC<HoldsProps> = ({ holds }) => {
+    return (
+      <>
+        {holds.map((hold, index) => (
+          <div
+            key={index}
+            className={`hold ${hold.type} ${hold.status}`}
+            style={{ top: hold.position.top, left: hold.position.left }}
+          >
+            <span className='sr-only'>{hold.label} maybe put coordinates?</span>
+          </div>
+        ))}
+      </>
+    );
   };
   
   return (
@@ -124,28 +170,23 @@ const CallGame: React.FC = () => {
           />
         </h1>
         <div className='score'>Score: {score}</div>
-        <div className='hold'></div>
         <div className='climber'>
+          <Holds holds={holds} />
           <Image
             src={climbers[0].imageUrl}
             alt={climbers[0].name}
             width={climbers[0].width}
             height={climbers[0].height}
+            longdesc={'a climber against a backdrop of a climbing wall, four subtle dark holds are currently used. One limb will move next, it is encircled by a yellow halo. A new hold is highlighted (how?) to move it to'}
             priority
           />
-          <div className={`current-limb`} 
-            style={{
-              top: topOffset(), 
-              left: leftOffset()}}
-            title={currentClimber.currentLimb}>  
-          </div>
         </div>
-        <div>Call: {call} - 6 - 3 (show call as it is being built by player)</div>
+        <div className='call'>Call: {call} - 6 - 3 (show call as it is being built by player)</div>
         <div className='btn-group'>
-          <button className='btn' onClick={() => guessHand('leftHand')} title="left hand">
+          <button className='btn left' onClick={() => guessHand('leftHand')} title="left hand">
               L
           </button>
-          <button className='btn' onClick={() => guessHand('rightHand')} title="right hand">
+          <button className='btn right' onClick={() => guessHand('rightHand')} title="right hand">
               R
           </button>
         </div>

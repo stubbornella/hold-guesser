@@ -46,12 +46,16 @@ body {
 }
 
 .wall {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .climber {
   display: block;
-  position: relative;
+  position: absolute;
+  top: 100px;
+  left: 0;
   max-height: 80dvh;
   border: 1px solid red;
 }
@@ -63,10 +67,28 @@ body {
   width: auto;
   margin-left: auto;
   margin-right: auto;
+  border: 2px solid coral;
 }
 
- .current-limb {
-  --limb-size: 10%;
+.hold {
+  --hold-size: 10%;
+  display: block;
+  position: absolute;
+  height: var(--hold-size);
+  aspect-ratio: 1 / 1;
+  margin-left: calc(-1 * var(--hold-size)/2);
+  margin-top: calc(-1* var(--hold-size)/2);
+  background-image: radial-gradient(circle,
+    rgba(0,0,0,.2) 0,
+    rgba(0,0,0,.5) 30%, 
+    transparent 31%);
+
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.current-limb, .selected {
+  --limb-size: 15%;
   display: block;
   position:absolute;
   height: var(--limb-size);
@@ -80,10 +102,87 @@ body {
     rgb(248, 239, 186) 31%);
 
   border-radius: 50%;
-  border: 10px solid black;
+  border: 7px solid black;
   border-style: double;
   z-index: -1;
+  transition: all 0.3s;
 }
+
+.hold.next {
+  /* circular element with a conical gradient background that is offset by 50% */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 55% 73%, 
+    navy 0%, navy 5%,
+    blue 45%, 
+    rgb(119,119,250) 50%,
+    transparent 55%, transparent 100%
+  );
+  
+}
+
+/*.used {
+  --used-hold-size: 10%;
+  display: block;
+  position: absolute;
+  height: var(--used-hold-size);
+  aspect-ratio: 1 / 1;
+  margin-left: calc(-1 * var(--used-hold-size)/2);
+  margin-top: calc(-1* var(--used-hold-size)/2);
+  background-color: red;
+  background-image: radial-gradient(circle,
+    rgba(0,0,0,.2) 0,
+    rgba(0,0,0,.5) 30%, 
+    transparent 31%);
+
+  border-radius: 50%;
+  border: 1px solid lime;
+  z-index: -1;
+}
+*/
+.next-hold {
+  width: 79px;
+  height: 93px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  background-image: url("/holds/1.png");
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.jug {
+  width: 20px;
+  height: 15px;
+  border-radius: 100px 100px 60px 60px;
+  background: 
+    radial-gradient(circle closest-side at 50% 40%, #ff5555, #bb0000),
+    radial-gradient(ellipse at top, rgba(255, 255, 255, 0.3), transparent 60%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent 70%);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.4), 
+              0 8px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.available-hold {
+
+}
+
 h1 {
   /*background-color: rgb(0, 26, 58);*/
   position: absolute;
