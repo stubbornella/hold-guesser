@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test('should navigate to the home page and check for text', async ({ page }) => {
+test('should navigate to the hold guesser page and check for title', async ({ page }) => {
   await page.goto('http://localhost:3000');
   const title = await page.textContent('h1');
   expect(title).toBe('Guess the hold?');
 });
+
 
 
 /*import { test, expect } from '@playwright/test';
