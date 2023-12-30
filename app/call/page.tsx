@@ -116,6 +116,7 @@ const CallGame: React.FC = () => {
     type: string,
     label: string,
     status: string,
+    limb: string,
   };
   
   type HoldsProps = {
@@ -124,22 +125,47 @@ const CallGame: React.FC = () => {
 
   const holds = [
     { position: { 
-      top: topOffset('leftHand'), 
-      left: leftOffset('leftHand') }, 
-      type: 'used', label: 'used, move from this hold', status: 'selected' },
+        top: topOffset('leftHand'), 
+        left: leftOffset('leftHand') 
+      }, 
+      limb: 'L', 
+      type: 'used', 
+      label: 'used, move from this hold', 
+      status: 'selected' },
     { position: { 
-      top: topOffset('rightHand'), 
-      left: leftOffset('rightHand') },
-      type: 'used', label: 'used', status: '' },
+        top: topOffset('rightHand'), 
+        left: leftOffset('rightHand') 
+      },
+      limb: 'R', 
+      type: 'used', 
+      label: 'used', 
+      status: '' 
+    },
     { position: { 
-      top: topOffset('leftFoot'), 
-      left: leftOffset('leftFoot') }, 
-      type: 'used', label: 'used', status: '' },
+        top: topOffset('leftFoot'), 
+        left: leftOffset('leftFoot') 
+      }, 
+      limb: 'left foot', 
+      type: 'used', 
+      label: 'used', 
+      status: '' 
+    },
     { position: { 
-      top: topOffset('rightFoot'), 
-      left: leftOffset('rightFoot') }, 
-      type: 'used', label: 'used', status: '' },
-    { position: { top: '30px', left: '40px' }, type: 'next', label: 'to this hold', status: '' },
+        top: topOffset('rightFoot'), 
+        left: leftOffset('rightFoot') 
+      }, 
+      limb: 'right foot', 
+      type: 'used', 
+      label: 'used', 
+      status: '' },
+    { position: { 
+        top: '30px', 
+        left: '40px' 
+      }, 
+      type: 'next', 
+      label: 'to this hold', 
+      status: '' 
+    },
   ];
   
   const Holds: React.FC<HoldsProps> = ({ holds }) => {
@@ -147,11 +173,13 @@ const CallGame: React.FC = () => {
       <>
         {holds.map((hold, index) => (
           <div
+            onClick={() => console.log('clicked', hold)}
             key={index}
             className={`hold ${hold.type} ${hold.status}`}
             style={{ top: hold.position.top, left: hold.position.left }}
           >
-            <span className='sr-only'>{hold.label} maybe put coordinates?</span>
+            <span className='limb'>{hold.limb}</span>
+            <span className='sr-only'>{hold.status} maybe put coordinates?</span>
           </div>
         ))}
       </>
