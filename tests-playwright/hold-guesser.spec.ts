@@ -4,9 +4,7 @@ test('should navigate to the hold guesser page and check for title', async ({ pa
   await page.goto('http://localhost:3000');
   const title = await page.textContent('h1');
   expect(title).toBe('Guess the hold?');
-});
-
-
+});  
 
 /*import { test, expect } from '@playwright/test';
 
