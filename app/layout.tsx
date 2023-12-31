@@ -16,6 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="pinterest" content="nopin" description="Sorry, you can't save from my website!" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   )
