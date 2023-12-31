@@ -86,26 +86,39 @@ body {
   transition: all 0.3s;
 }
 
-.hold span.limb {
-  height: 100%;
+.hold .limb {
+  height: 40px;
   aspect-ratio: 1 / 1;
   background-color: lightgray;
   color: black;
   border-radius: 50%;
-  border: 1px solid teal;
   position: relative;
   z-index: 10;
   transition: all 0.3s;
-  display: none;
-  border: 10px solid coral;
-  display: block;
+  display: inline-block;
   text-align: center;
   font-family: monospace;
-  font-size: 16px;
+  font-size: 26px;
+  text-align: center;
+  margin: auto;
 }
 
-.selected.hold .limb {
+
+
+.hold.selected .limb {
   background-color: rgb(248, 239, 186);
+}
+
+.hold.foot .limb {
+  background-color: lightgray;
+  aspect-ratio: auto;
+  height: 28px;
+  font-size: 19px;
+  border-radius: 15px;
+  position: absolute;
+  text-align: center;
+  width: 221%;
+  white-space: nowrap;
 }
 
 .selected {

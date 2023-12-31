@@ -172,15 +172,15 @@ const CallGame: React.FC = () => {
     return (
       <>
         {holds.map((hold, index) => (
-          <div
-            onClick={() => console.log('clicked', hold)}
+          <button
+            onClick={() => guessHand(hold.limb)}
             key={index}
-            className={`hold ${hold.type} ${hold.status}`}
+            className={`hold ${hold.type} ${hold.status} ${hold.limb}`}
             style={{ top: hold.position.top, left: hold.position.left }}
           >
             <span className='limb'>{hold.limb}</span>
             <span className='sr-only'>{hold.status} maybe put coordinates?</span>
-          </div>
+          </button>
         ))}
       </>
     );
