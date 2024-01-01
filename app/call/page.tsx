@@ -185,19 +185,45 @@ const CallGame: React.FC = () => {
         </button>
       );
     } else if (type === 'next' || type === 'random') {
+      const altText = type === 'next' ? 'next hold' : 'random hold';
+
+      /*  sharing coordinates seems to cause mismatches between client and server, I had to remove this code, put it back
+          <span className='sr-only'>Coordinates {cssTop}, {cssLeft} TODO: issue here, coordinates are not the same on the server and client. commenting out this line fixes it. Maybe a css issue? Or possibly because the img has no height.</span>
+
+      */
+
       return (
         <div {...holdProps}>
-          <img
-            src={`/hold/${holdImageNumber}.png`}
-            alt={hold}
+          <Image
+            src={`/holds/${holdImageNumber}.png`}
+            alt={altText}
+            height={50}
+            width={50}
           />
-          {holdText(limb)};
+          <p>hold text coordinates go here</p>
         </div>
       );
     } else {
       return 'HOLD TYPE UNKNOWN'; // or some better default value
     }
   }
+
+  // NOT USED iterate over the holds array and render each hold
+  type HoldsProps = {
+    holds: Holds,
+  };
+
+  // NOT USED
+
+  const Holds: React.FC<HoldsProps> = ({ holds }) => {
+    return (
+      <div className='holds'>
+        {holds.map((hold, index) => (
+          <Hold {...hold} key={index} />
+        ))}
+      </div>
+    );
+  };
 
   const CurrentHolds: React.FC = () => (
     <>
@@ -207,6 +233,23 @@ const CallGame: React.FC = () => {
       <Hold type='in-use' limb='rightFoot' />
     </>
   );
+
+  const NextHold: React.FC = () => (
+    <>
+      <Hold type='next' />
+    </>
+  );
+
+  /*  hold off on generating a set of holds until I get the holds 
+      to stop moving around on every click
+
+  const ClimbingHolds: React.FC<{ numHolds: number }> = ({ numHolds }) => (
+    <>
+    for (let i = 0; i < numHolds; i++) {
+      <Hold type='random' />
+    }
+    </>
+  );*/
   
   type CallProps = {
     limb?: string,
@@ -237,6 +280,7 @@ const CallGame: React.FC = () => {
         </h1>
         <div className='score'>Score: {score}</div>
         <Call {...call} />
+        <NextHold />
         <div className='climber'>
           <CurrentHolds />
           <Image
