@@ -105,7 +105,7 @@ body {
 
 
 
-.hold.selected .limb {
+.hold.moveFromHold .limb {
   background-color: rgb(248, 239, 186);
 }
 
@@ -121,7 +121,7 @@ body {
   white-space: nowrap;
 }
 
-.selected {
+.moveFromHold {
   --hold-size: 15%;
   /*
   height: var(--limb-size);

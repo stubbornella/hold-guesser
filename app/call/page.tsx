@@ -61,31 +61,49 @@ const climbers: Climbers = [
 // game that teaches people who don't know their right from their left how to call a climb for a visually impaired climber
 
 const CallGame: React.FC = () => {
+  const getRandomLimb = () => {
+    const limbs = ['leftHand', 'rightHand', 'leftFoot', 'rightFoot'];
+    return limbs[Math.floor(Math.random() * limbs.length)];
+  };
   const [currentClimber, setCurrentClimber] = useState<Climber>(climbers[0]);
+  const [currentLimb, setCurrentLimb] = useState<string>('');
   const [score, setScore] = useState(0);
   const [call, setCall] = useState<CallProps>({ limb: '', direction: '', distance: '' });
 
   useEffect(() => {
-    setCurrentClimber({
-      ...currentClimber,
-      currentLimb: Math.random() < 0.5 ? 'rightHand' : 'leftHand'
-    });
+    setCurrentLimb(getRandomLimb());
   }, []);
 
   const guessHand = (hand: string) => {
-    if (hand === 'L' && currentClimber.currentLimb === 'leftHand' || hand === 'R' && currentClimber.currentLimb === 'rightHand') {
-      console.log(hand, currentClimber.currentLimb);
+    if (hand === currentLimb) {
+      console.log(hand, currentLimb);
       setScore(score + 1);
       setCall({limb: hand});
+      setCurrentLimb(getRandomLimb());
     } else {
-      console.log(hand, currentClimber.currentLimb);
+      console.log(hand, currentLimb);
       clearCall();
       setScore(score - 1);
     }
-    setCurrentClimber({ // the name is wrong, this selects a new hand, not a new climber
-      ...currentClimber,
-      currentLimb: Math.random() < 0.5 ? 'rightHand' : 'leftHand'
-    });
+  };
+
+  const displayText = (limb: string) => {    
+    switch (limb) {
+      case 'rightHand':
+        return 'R';
+        break;
+      case 'leftHand':
+        return 'L';
+        break;
+      case 'leftFoot':
+        return 'left foot';
+        break;
+      case 'rightFoot':
+        return 'right foot';
+        break;
+      default:
+        break;
+    }
   };
 
   /* calculate the offset of the hold based on the coordinates of the climber's limbs */
@@ -116,80 +134,80 @@ const CallGame: React.FC = () => {
   };
 
   type Hold = {
-    position: { top: string, left: string },
-    type: string,
-    label: string,
-    status: string,
-    limb: string,
-  };
-  
-  type HoldsProps = {
-    holds: Hold[],
+    type?: string,
+    limb?: string,
   };
 
-  const holds = [
-    { position: { 
-        top: topOffset('leftHand'), 
-        left: leftOffset('leftHand') 
-      }, 
-      limb: 'L', 
-      type: 'used', 
-      label: 'move from this hold', 
-      status: 'selected' },
-    { position: { 
-        top: topOffset('rightHand'), 
-        left: leftOffset('rightHand') 
-      },
-      limb: 'R', 
-      type: 'used', 
-      label: 'used', 
-      status: '' 
-    },
-    { position: { 
-        top: topOffset('leftFoot'), 
-        left: leftOffset('leftFoot') 
-      }, 
-      limb: 'left foot', 
-      type: 'used', 
-      label: 'used', 
-      status: '' 
-    },
-    { position: { 
-        top: topOffset('rightFoot'), 
-        left: leftOffset('rightFoot') 
-      }, 
-      limb: 'right foot', 
-      type: 'used', 
-      label: 'used', 
-      status: '' },
-    { position: { 
-        top: '30px', 
-        left: '40px' 
-      }, 
-      type: 'next', 
-      label: 'to this hold', 
-      status: '' 
-    },
-  ];
-  
-  const Holds: React.FC<HoldsProps> = ({ holds }) => {
-    return (
-      <>
-        {holds.map((hold, index) => (
-          <button
-            onClick={() => guessHand(hold.limb)}
-            key={index}
-            className={`hold ${hold.type} ${hold.status} ${hold.limb}`}
-            style={{ top: hold.position.top, left: hold.position.left }}
-          >
-            <span className='limb'>{hold.limb}</span>
-            <span className='sr-only'>{hold.status} maybe put coordinates?</span>
-          </button>
-        ))}
-      </>
-    );
-  };
 
+  const Hold: React.FC<Hold> = ({limb, type}) => {
+    let cssTop: string;
+    let cssLeft: string;
+    let highlightHold: string = '';
+    let label: string = '';
+    let numberOfHoldImages = 5; //increase this number as more hold images are added
+    const holdImageNumber = Math.floor(Math.random() * numberOfHoldImages) + 1;
+
+    // position holds
+    if (limb) { // the climber is standing on the hold, place it near their limbs
+      cssTop = topOffset(limb);
+      cssLeft = leftOffset(limb);
+    } else { // otherwise, randomly place holds around the wall (or other position relative container)
+      cssTop = `${Math.random() * 100}%`;
+      cssLeft = `${Math.random() * 100}%`;
+    }
+
+    // climber will move from this hold
+    if (limb === currentLimb) {
+      highlightHold = 'moveFromHold';
+      label = 'move from this hold';
+    }
+    
+    const holdProps = {
+      className: `hold ${type} ${limb} ${highlightHold}`,
+      style: { top: cssTop, left: cssLeft },
+    };
+
+    const holdText = (limb: string) => {
+      return (
+        <>
+          <span className='limb'>{displayText(limb)}</span>
+          <span className='sr-only'>{limb} Coordinates {cssTop}, {cssLeft}</span>
+        </>
+      );
+    };
+
+    if (type === 'in-use') {
+      return (
+        <button
+          onClick={() => guessHand(limb)}
+          {...holdProps}>
+          {holdText(limb)}
+        </button>
+      );
+    } else if (type === 'next' || type === 'random') {
+      return (
+        <div {...holdProps}>
+          <img
+            src={`/hold/${holdImageNumber}.png`}
+            alt={hold}
+          />
+          {holdText(limb)};
+        </div>
+      );
+    } else {
+      return 'HOLD TYPE UNKNOWN'; // or some better default value
+    }
+  }
+
+  const CurrentHolds: React.FC = () => (
+    <>
+      <Hold type='in-use' limb='leftHand' />
+      <Hold type='in-use' limb='rightHand' />
+      <Hold type='in-use' limb='leftFoot' />
+      <Hold type='in-use' limb='rightFoot' />
+    </>
+  );
+  
   type CallProps = {
     limb?: string,
     direction?: string,
@@ -199,7 +217,7 @@ const CallGame: React.FC = () => {
   const Call: React.FC<CallProps> = ({ limb, direction, distance }) => {
     return (
       <div className='call'>
-        <span className='limb'>{limb}</span>
+        <span className='limb'>{displayText(limb)}</span>
         <span className='direction'>{direction}</span>
         <span className='distance'>{distance}</span>
       </div>
@@ -220,7 +238,7 @@ const CallGame: React.FC = () => {
         <div className='score'>Score: {score}</div>
         <Call {...call} />
         <div className='climber'>
-          <Holds holds={holds} />
+          <CurrentHolds />
           <Image
             src={climbers[0].imageUrl}
             alt={climbers[0].name}
