@@ -57,7 +57,7 @@ body {
   top: 100px;
   left: 0;
   max-height: 80dvh;
-  margin: 150px;
+  margin: 0 auto;
 }
 
 .climber img {
@@ -225,6 +225,11 @@ h1 img {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+
+.call {
+  font-size: 30px;
+  text-align: center;
 }
 
 

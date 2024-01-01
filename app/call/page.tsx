@@ -63,7 +63,7 @@ const climbers: Climbers = [
 const CallGame: React.FC = () => {
   const [currentClimber, setCurrentClimber] = useState<Climber>(climbers[0]);
   const [score, setScore] = useState(0);
-  const [call, setCall] = useState('');
+  const [call, setCall] = useState<CallProps>({ limb: '', direction: '', distance: '' });
 
   useEffect(() => {
     setCurrentClimber({
@@ -73,18 +73,22 @@ const CallGame: React.FC = () => {
   }, []);
 
   const guessHand = (hand: string) => {
-    if (hand === currentClimber.currentLimb) {
+    if (hand === 'L' && currentClimber.currentLimb === 'leftHand' || hand === 'R' && currentClimber.currentLimb === 'rightHand') {
+      console.log(hand, currentClimber.currentLimb);
       setScore(score + 1);
-      setCall(hand);
+      setCall({limb: hand});
     } else {
+      console.log(hand, currentClimber.currentLimb);
+      clearCall();
       setScore(score - 1);
     }
-    setCurrentClimber({
+    setCurrentClimber({ // the name is wrong, this selects a new hand, not a new climber
       ...currentClimber,
       currentLimb: Math.random() < 0.5 ? 'rightHand' : 'leftHand'
     });
   };
 
+  /* calculate the offset of the hold based on the coordinates of the climber's limbs */
   const leftOffset = (limb: string): string => {
     if (!currentClimber || !currentClimber.coordinates || !limb || !currentClimber.coordinates[limb]) {
       return '-5px'; // or some other default value
@@ -130,7 +134,7 @@ const CallGame: React.FC = () => {
       }, 
       limb: 'L', 
       type: 'used', 
-      label: 'used, move from this hold', 
+      label: 'move from this hold', 
       status: 'selected' },
     { position: { 
         top: topOffset('rightHand'), 
@@ -185,19 +189,36 @@ const CallGame: React.FC = () => {
       </>
     );
   };
+
+  type CallProps = {
+    limb?: string,
+    direction?: string,
+    distance?: string,
+  };
+
+  const Call: React.FC<CallProps> = ({ limb, direction, distance }) => {
+    return (
+      <div className='call'>
+        <span className='limb'>{limb}</span>
+        <span className='direction'>{direction}</span>
+        <span className='distance'>{distance}</span>
+      </div>
+    );
+  };
+
+// function to clear all the values from the call
+  const clearCall = () => {
+    setCall({});
+  };
+
   
   return (
     <div className='wall'>
         <h1>
-          <Image
-            src='/logo.png'
-            alt='Climb Assist'
-            height='60'
-            width='51'
-            priority
-          />
+          Climb assist
         </h1>
         <div className='score'>Score: {score}</div>
+        <Call {...call} />
         <div className='climber'>
           <Holds holds={holds} />
           <Image
@@ -208,16 +229,8 @@ const CallGame: React.FC = () => {
             longdesc={'a climber against a backdrop of a climbing wall, four subtle dark holds are currently used. One limb will move next, it is encircled by a yellow halo. A new hold is highlighted (how?) to move it to'}
             priority
           />
-        </div>
-        <div className='call'>Call: {call} - 6 - 3 (show call as it is being built by player)</div>
-        <div className='btn-group'>
-          <button className='btn left' onClick={() => guessHand('leftHand')} title="left hand">
-              L
-          </button>
-          <button className='btn right' onClick={() => guessHand('rightHand')} title="right hand">
-              R
-          </button>
-        </div>
+        </div> 
+        
     </div>
   );
 };
