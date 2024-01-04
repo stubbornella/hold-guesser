@@ -274,25 +274,64 @@ const CallGame: React.FC = () => {
 
   
   return (
-    <div className='wall'>
+    <div className='gym layout-debugging'>
+      <div className='header'>
         <h1>
-          Climb assist
+          <div className='mountains'>
+            <Image
+              src='/black-mountains.png'
+              alt='climb together'
+              height={25}
+              width={53}
+              priority
+            />
+          </div>
         </h1>
-        <div className='score'>Score: {score}</div>
-        <Call {...call} />
-        <NextHold />
-        <div className='climber'>
-          <CurrentHolds />
-          <Image
-            src={climbers[0].imageUrl}
-            alt={climbers[0].name}
-            width={climbers[0].width}
-            height={climbers[0].height}
-            longdesc={'a climber against a backdrop of a climbing wall, four subtle dark holds are currently used. One limb will move next, it is encircled by a yellow halo. A new hold is highlighted (how?) to move it to'}
-            priority
-          />
-        </div> 
-        
+        <div className='logo'>
+            <Image
+              src='/logo-words.png'
+              alt=''
+              height={25}
+              width={125}
+              priority
+            />
+          </div>
+        <div className='score'>
+          <table>
+                <thead>
+                  <tr>
+                    <th colSpan={3}>Score</th>
+                  </tr>
+                  <tr>
+                    <th>✅</th>
+                    <th>❌</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{score}</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+            </table>    
+        </div>
+      </div>
+      <div className='wall'>
+      <div className='climber'>
+        <CurrentHolds />
+        <Image
+          src={climbers[0].imageUrl}
+          alt={climbers[0].name}
+          width={climbers[0].width}
+          height={climbers[0].height}
+          longdesc={'a climber against a backdrop of a climbing wall, four subtle dark holds are currently used. One limb will move next, it is encircled by a yellow halo. A new hold is highlighted (how?) to move it to'}
+          priority
+        />
+      </div>
+      </div>
+      <div className='footer'>
+        <Call />
+      </div> 
     </div>
   );
 };
