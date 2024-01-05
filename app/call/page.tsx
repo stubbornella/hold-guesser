@@ -68,6 +68,7 @@ const CallGame: React.FC = () => {
   const [currentClimber, setCurrentClimber] = useState<Climber>(climbers[0]);
   const [currentLimb, setCurrentLimb] = useState<string>('');
   const [score, setScore] = useState(0);
+  const [fail, setFail] = useState(0);
   const [call, setCall] = useState<CallProps>({ limb: '', direction: '', distance: '' });
 
   useEffect(() => {
@@ -83,7 +84,7 @@ const CallGame: React.FC = () => {
     } else {
       console.log(hand, currentLimb);
       clearCall();
-      setScore(score - 1);
+      setFail(fail + 1);
     }
   };
 
@@ -276,6 +277,13 @@ const CallGame: React.FC = () => {
   return (
     <div className='gym layout-debugging'>
       <div className='header'>
+        <p className='sr-only'>A climber against a backdrop of a climbing wall, four subtle dark holds are currently used. 
+          One limb will move next, it is encircled by a lemon yellow halo. 
+          Your caller should click the limb that will move next to begin to build the call.
+          They can see the call in the call box at the bottom of the game. 
+          It'll work best if they say it aloud as they build the call.
+          \(Eventually, once I build it\) The caller should then click the direction and distance of the move.  
+        </p>
         <h1>
           <div className='mountains'>
             <Image
@@ -310,27 +318,26 @@ const CallGame: React.FC = () => {
                 <tbody>
                   <tr>
                     <td>{score}</td>
-                    <td>0</td>
+                    <td>{fail}</td>
                   </tr>
                 </tbody>
             </table>    
         </div>
       </div>
       <div className='wall'>
-      <div className='climber'>
-        <CurrentHolds />
-        <Image
-          src={climbers[0].imageUrl}
-          alt={climbers[0].name}
-          width={climbers[0].width}
-          height={climbers[0].height}
-          longdesc={'a climber against a backdrop of a climbing wall, four subtle dark holds are currently used. One limb will move next, it is encircled by a yellow halo. A new hold is highlighted (how?) to move it to'}
-          priority
-        />
-      </div>
+        <div className='climber'>
+          <CurrentHolds />
+          <Image
+            src={climbers[0].imageUrl}
+            alt={climbers[0].name}
+            width={climbers[0].width}
+            height={climbers[0].height}
+            priority
+          />
+        </div>
       </div>
       <div className='footer'>
-        <Call />
+        <Call {...call} />
       </div> 
     </div>
   );

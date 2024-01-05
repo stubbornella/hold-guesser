@@ -80,6 +80,7 @@ body {
   grid-row: 1;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
+  z-index: 100;
 }
 
 h1 {
@@ -87,7 +88,7 @@ h1 {
   padding: 0;
   grid-column: 1;
   color: transparent;
-
+  display: none;
 }
 
 h1 .mountains {
@@ -98,17 +99,19 @@ h1 .mountains {
   grid-column: 2;
   width: 1fr;
   justify-content: center;
+  display: none;
 }
 
 .score {
-  border: 3px solid black;
+  border: 3px solid rgb(46, 46, 46);
   border-radius: 5px;
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
   font-size: 1.5rem;
   position: absolute;
   top: 20px;
   right: 20px; 
+  width: 7em;
 }
 .score table {
   width: 100%;
@@ -119,7 +122,7 @@ h1 .mountains {
 
 .score th, 
 .score td {
-  width: 59%;
+  width: 50%;
   text-align: center;
   padding: 0 10px;
 }
@@ -130,7 +133,7 @@ h1 .mountains {
 
 .score table tr:first-child th {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 
 .score tr:first-child {
@@ -142,29 +145,51 @@ h1 .mountains {
 
 
 .call {
-  grid-row: 2 / 3;
-  min-height: 45px;
+  grid-row: 2;
+  min-height: 48px;
   line-height: 1.2;
-  font-size: 48px;
+  font-size: 40px;
   font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
 .gym {
   background-image: url("/climbing-wall.png");
+  background-size: cover;
+}
+
+.gym:before {
+  content: "";
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background-color 0.3s;
+}
+
+.gym:hover:before {
+  background-color: rgba(255,255,255, .6);
+}
+
+.wall:hover {
+  
 }
 
 .footer {
-  background: linear-gradient(
+  /*background: linear-gradient(
     to top right, 
     rgb(7, 71, 40), 
     rgb(139, 226, 6), 
     rgb(2, 245, 208), 
     rgb(220, 247, 3)
-  );
-  color: black;
+  );*/
+  background-color: rgba(0, 0, 0, .8);
+  color: rgb(220, 247, 3);
   padding: 10px;
   text-align: center;
   grid-row: 4;
+  z-index: 100;
 }
 
 .wall {
@@ -227,6 +252,7 @@ h1 .mountains {
   font-size: 26px;
   text-align: center;
   margin: auto;
+  transition: all 0.3s;
 }
 
 .leftFoot .limb, .rightFoot .limb {
@@ -240,7 +266,7 @@ h1 .mountains {
 }
 
 .hold.moveFromHold .limb {
-  background-color: rgb(248, 239, 186);
+  background-color: rgb(220, 247, 3); /*rgb(248, 239, 186);*/
 }
 
 .hold.foot .limb {
@@ -256,16 +282,16 @@ h1 .mountains {
 }
 
 .moveFromHold {
-  --hold-size: 15%;
+  --hold-size: 19%;
   /*
   height: var(--limb-size);
   margin-left: calc(-1 * var(--limb-size)/2);
   margin-top: calc(-1* var(--limb-size)/2);*/
-  background-color: rgb(248, 239, 186);
+  background-color: rgb(220, 247, 3);
   background-image: radial-gradient(circle,
     rgba(0,0,0,.2) 0,
     rgba(0,0,0,.5) 30%, 
-    rgb(248, 239, 186) 31%);
+    rgb(220, 247, 3) 31%);
 
   border: 7px solid black;
   border-style: double;
