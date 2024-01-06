@@ -23,6 +23,7 @@ type Coordinate = {
 
 // define coordinates to match the data structure in the climbers array
 type Coordinates = {
+  [key: string]: Coordinate;
   rightHand: Coordinate;
   leftHand: Coordinate;
   rightFoot: Coordinate;
@@ -70,6 +71,7 @@ const CallGame: React.FC = () => {
   const [score, setScore] = useState(0);
   const [fail, setFail] = useState(0);
   const [call, setCall] = useState<CallProps>({ limb: '', direction: '', distance: '' });
+  const [correctGuessLimb, setCorrectGuessLimb] = useState(false);
 
   useEffect(() => {
     setCurrentLimb(getRandomLimb());
@@ -77,12 +79,11 @@ const CallGame: React.FC = () => {
 
   const guessHand = (hand: string) => {
     if (hand === currentLimb) {
-      console.log(hand, currentLimb);
       setScore(score + 1);
       setCall({limb: hand});
+      setCorrectGuessLimb(true);
       setCurrentLimb(getRandomLimb());
     } else {
-      console.log(hand, currentLimb);
       clearCall();
       setFail(fail + 1);
     }
@@ -136,7 +137,7 @@ const CallGame: React.FC = () => {
 
   type Hold = {
     type?: string,
-    limb?: string,
+    limb: string,
   };
 
 
@@ -149,7 +150,7 @@ const CallGame: React.FC = () => {
     const holdImageNumber = Math.floor(Math.random() * numberOfHoldImages) + 1;
 
     // position holds
-    if (limb) { // the climber is standing on the hold, place it near their limbs
+    if (limb === 'rightHand' || limb === 'leftHand' || limb === 'rightFoot' || limb === 'leftFoot') { // the climber is standing on the hold, place it near their limbs
       cssTop = topOffset(limb);
       cssLeft = leftOffset(limb);
     } else { // otherwise, randomly place holds around the wall (or other position relative container)
@@ -195,36 +196,13 @@ const CallGame: React.FC = () => {
 
       return (
         <div {...holdProps}>
-          <Image
-            src={`/holds/${holdImageNumber}.png`}
-            alt={altText}
-            height={50}
-            width={50}
-          />
-          <p>hold text coordinates go here</p>
+          <p className='sr-only'>Hold {cssTop}%, {cssLeft}%</p>
         </div>
       );
     } else {
       return 'HOLD TYPE UNKNOWN'; // or some better default value
     }
   }
-
-  // NOT USED iterate over the holds array and render each hold
-  type HoldsProps = {
-    holds: Holds,
-  };
-
-  // NOT USED
-
-  const Holds: React.FC<HoldsProps> = ({ holds }) => {
-    return (
-      <div className='holds'>
-        {holds.map((hold, index) => (
-          <Hold {...hold} key={index} />
-        ))}
-      </div>
-    );
-  };
 
   const CurrentHolds: React.FC = () => (
     <>
@@ -237,23 +215,12 @@ const CallGame: React.FC = () => {
 
   const NextHold: React.FC = () => (
     <>
-      <Hold type='next' />
+      <Hold type='next' limb='unused' />
     </>
   );
-
-  /*  hold off on generating a set of holds until I get the holds 
-      to stop moving around on every click
-
-  const ClimbingHolds: React.FC<{ numHolds: number }> = ({ numHolds }) => (
-    <>
-    for (let i = 0; i < numHolds; i++) {
-      <Hold type='random' />
-    }
-    </>
-  );*/
   
   type CallProps = {
-    limb?: string,
+    limb: string,
     direction?: string,
     distance?: string,
   };
@@ -270,25 +237,28 @@ const CallGame: React.FC = () => {
 
 // function to clear all the values from the call
   const clearCall = () => {
-    setCall({});
+    setCall({limb: '', direction: '', distance: ''});
   };
 
   
   return (
+    
     <div className='gym layout-debugging'>
+      <h1>Climb with me</h1>
       <div className='header'>
-        <p className='sr-only'>A climber against a backdrop of a climbing wall, four subtle dark holds are currently used. 
+        <p className='sr-only'>A climber against a backdrop of a climbing wall, 
+        four dark holds are currently used. 
           One limb will move next, it is encircled by a lemon yellow halo. 
+          Inside the halo is the name the caller should say when describing that limb: L, R, left foot, or right foot.
           Your caller should click the limb that will move next to begin to build the call.
-          They can see the call in the call box at the bottom of the game. 
-          It'll work best if they say it aloud as they build the call.
-          \(Eventually, once I build it\) The caller should then click the direction and distance of the move.  
+          They can see the call in the call box at the bottom of the game. It&apos;ll work best if they say it aloud as they build the call.
+          Eventually, once I build it, the caller should then click the direction and distance of the move.  
         </p>
         <h1>
           <div className='mountains'>
             <Image
               src='/black-mountains.png'
-              alt='climb together'
+              alt='climb with me'
               height={25}
               width={53}
               priority
@@ -325,6 +295,7 @@ const CallGame: React.FC = () => {
         </div>
       </div>
       <div className='wall'>
+        {correctGuessLimb && <NextHold />}
         <div className='climber'>
           <CurrentHolds />
           <Image
